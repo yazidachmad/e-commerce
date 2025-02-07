@@ -1,3 +1,5 @@
+import { Poppins, Teko } from 'next/font/google';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -7,9 +9,13 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        poppins: ["poppins", "serif"],
+        teko: ["teko", "serif"],
+      },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        light: "#fbfaff0",
+        dark: "#1a202c",
       },
     },
   },
