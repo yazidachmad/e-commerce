@@ -20,7 +20,6 @@ export default function LoginForm() {
     password: "",
   });
 
-
   const toggleObscurePassword = () => {
     setObscurePassword(!obscurePassword);
   };
@@ -68,7 +67,7 @@ export default function LoginForm() {
     onSubmit={handleSubmit}>
        
       <Link href="/" className="flex items-center gap-2">
-        <Image src="/log-logo.png" alt="" width={150} height={150} />
+        <Image src="/logonya.png" alt="" width={100} height={100} />
         <span className="text-2xl font-bold font-teko">{Config.appName()}</span>
       </Link>
       <div className="h-px w-1/2 bg-dark/35"></div>

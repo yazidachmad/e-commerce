@@ -3,74 +3,93 @@ import Config from "@/core/config";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { GiShoppingCart } from "react-icons/gi";
-import { FiUser } from "react-icons/fi";
-import { GoSearch } from "react-icons/go";
-import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import { FaSearch, FaShoppingCart, FaUser, FaMapMarkerAlt } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/core/useAuth";
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  const router = useRouter(); // Initialize useRouter
+    const [open, setOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const router = useRouter();
+    
+    const toggleMenu = () => {
+        setOpen(!open);
+    };
 
-  const toggleMenu = () => {
-    setOpen(!open);
-  };
+    const logout = () => {
+        localStorage.removeItem("token");
+        router.push("/login");
+    };
 
-  const handleLogout = () => {
-    // Clear user session or token here
-    // For example, if using localStorage:
-    localStorage.removeItem("userToken"); // Adjust based on your auth implementation
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.push(`/search?query=${searchQuery}`);
+        }
+    };
 
-    // Redirect to the login page or home page
-    router.push("/login"); // Redirect to login page
-  };
+    const user = useAuth();
 
-  return (
-    <header className="flex justify-between items-center px-6 py-4 sticky top-0 z-30 bg-white shadow">
-      <Link href="/" className="flex items-center gap-2">
-        <Image
-          src="/log-logo.png"
-          alt=""
-          width={100}
-          height={100}
-          className="w-8"
-        />
-        <span className="text-2xl font-bold font-teko">{Config.appName()}</span>
-      </Link>
-      <nav className="text-3xl flex items-center gap-3">
-        <Link href="/search">
-          <GoSearch />
-        </Link>
-        <Link href="/cart">
-          <GiShoppingCart />
-        </Link>
-        <button onClick={toggleMenu}>
-          <FiUser />
-        </button>
-      </nav>
-      <div
-        className={`absolute flex flex-col gap-2 bg-white shadow top-20 right-4 py-4 min-w-40 rounded-md transition-all duration-300 ease-in-out origin-top-right ${open ? "scale-100 opacity-100" : "scale-0 opacity-0"}`}
-      >
-        <Link href="/login" className="py-2 px-4 hover:bg-gray-100 text-start">
-          Login
-        </Link>
-        <Link href="/register" className="py-2 px-4 hover:bg-gray-100 text-start">
-          Register
-        </Link>
-        <Link href="/profile" className="py-2 px-4 hover:bg-gray-100 text-start">
-          Profile
-        </Link>
-        <Link href="/order" className="py-2 px-4 hover:bg-gray-100 text-start">
-          Order
-        </Link>
-        <button
-          type="button"
-          onClick={handleLogout} // Call handleLogout on click
-          className="py-2 px-4 hover:bg-gray-100 text-start"
-        >
-          Logout
-        </button>
-      </div>
-    </header>
-  );
+    return(
+        <>
+            <header className="flex justify-between items-center px-6 py-4 sticky top-0 z-50 bg-gray-700 shadow-md border-b border-gray-800 text-white">
+                <Link href="/" className="flex items-center gap-3">
+                    <Image
+                        src="/logonya.png"
+                        alt="Logo"
+                        width={50}
+                        height={50}
+                        className="w-50 h-50"
+                    />
+                    <span className="font-poppins text-2xl font-bold">{Config.appName()}</span>
+                </Link>
+                
+                <form onSubmit={handleSearch} className="relative flex items-center w-1/3">
+                    <input
+                        type="text"
+                        placeholder="Cari produk..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full px-4 py-2 rounded-full text-gray-900 focus:outline-none"
+                    />
+                    <button type="submit" className="absolute right-2 text-gray-600">
+                        <FaSearch size={20} />
+                    </button>
+                </form>
+
+                <nav className="text-2xl flex items-center gap-5">
+                    <Link href="/cart" className="hover:text-yellow-300 transition-colors relative">
+                        <FaShoppingCart />
+                        <span className="absolute -top-2 -right-2 bg-white text-gray-700 text-xs font-bold rounded-full px-1.5 py-0.5">3</span>
+                    </Link>
+                    <button onClick={toggleMenu} className="hover:text-yellow-300 transition-colors">
+                        <FaUser />
+                    </button>
+                </nav>
+
+                {open && (
+                    <div className="absolute flex flex-col gap-2 bg-white shadow-lg top-16 right-6 py-4 min-w-48 rounded-lg border border-gray-200 text-gray-800 animate-fade-in">
+                        {user ? (
+                            <>
+                                <Link href="/profile" className="py-2 px-4 hover:bg-gray-100 text-start">Profile</Link>
+                                <Link href="/order" className="py-2 px-4 hover:bg-gray-100 text-start">My Order</Link>
+                                <button type="button" onClick={logout} className="py-2 px-4 hover:bg-red-100 text-red-600 text-start">Logout</button>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/login" className="py-2 px-4 hover:bg-gray-100 text-start">Login</Link>
+                                <Link href="/register" className="py-2 px-4 hover:bg-gray-100 text-start">Register</Link>
+                            </>
+                        )}
+                    </div>
+                )}
+            </header>
+            
+            {/* Deliver To Section */}
+            <div className="bg-gray-200 text-gray-700 py-2 px-6 flex items-center gap-2 text-sm">
+                <FaMapMarkerAlt className="text-red-500" />
+                <span>Dikirim ke : <strong>Sidoarjo</strong></span>
+            </div>
+        </>
+    );
 }

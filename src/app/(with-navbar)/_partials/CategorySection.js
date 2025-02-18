@@ -12,7 +12,7 @@ export default async function CategorySection () {
       <h2 className="text-2xl font-bold text-center uppercase mb-4">Categories</h2>
       <div className="grid grid-flow-cols-2 md:grid-cols-5">
         {data.data.map((category) => (
-          <CategoryCard key={category.name} name={category.name} image={Config.baseUrl() + category.img_url} href={"#"} />
+          <CategoryCard key={category.name} name={category.name} image={Config.baseUrl() + category.img_url} href={`/category/${category.slug}`} />
         ))}
         
         

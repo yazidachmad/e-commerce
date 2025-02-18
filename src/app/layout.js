@@ -1,4 +1,5 @@
 
+import { Toaster } from "react-hot-toast";
 import Config from "../core/config";
 import "./globals.css";
 
@@ -22,7 +23,7 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body><Toaster />{children}</body>
     </html>
   );
 }

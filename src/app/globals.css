@@ -4,5 +4,5 @@
 
 
 :root {
-    @apply bg-white text-black font-poppins;
+    @apply bg-light text-black font-poppins;
 }
